@@ -12,4 +12,12 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
     - uses: actions/checkout@v3
-    - run: go test ./...
+    - run: pwd && env && ls && go build ./../main.go
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+       repo_token: "${{ secrets.GITHUB_TOKEN }}"
+       automatic_release_tag: "latest"
+       prerelease: true
+       title: "Development Build"
+       files: |
+         eport
