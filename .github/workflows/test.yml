@@ -13,11 +13,24 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - uses: actions/checkout@v3
     - run: pwd && env && ls && go build -o eport main.go
-    - uses: "marvinpinto/action-automatic-releases@latest"
+
+  release:
+    name: Release on GitHub
+    runs-on: ${{ matrix.go-version }}
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v1
+
+    - name: Validates GO releaser config
+      uses: docker://goreleaser/goreleaser:latest
       with:
-       repo_token: "${{ secrets.GITHUB_TOKEN }}"
-       automatic_release_tag: "latest"
-       prerelease: true
-       title: "Development Build"
-       files: |
-         eport
+        args: check
+
+    - name: Create release on GitHub
+      uses: docker://goreleaser/goreleaser:latest
+      with:
+        args: release
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+         
+         
