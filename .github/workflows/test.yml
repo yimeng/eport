@@ -1,8 +1,13 @@
 name: Release
+# 触发条件
 on:
-  create:
+  push:
+    # 创建 tag 时
     tags:
     - v*
+    # 推送到 master 分支时
+    branches:
+    - main
 
 jobs:
   release:
@@ -10,16 +15,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@v1
-
-    - name: Validates GO releaser config
-      uses: docker://goreleaser/goreleaser:latest
+      uses: actions/checkout@v2
+        
+    # 安装 Go
+    - name: Set up Go
+      uses: actions/setup-go@v2
       with:
-        args: check
-
+        go-version: 1.17
+    # 使用 goreleaser 编译 release
     - name: Create release on GitHub
-      uses: docker://goreleaser/goreleaser:latest
+      uses: goreleaser/goreleaser-action@v2
       with:
-        args: release
+        # GoReleaser 版本
+        version: latest
+        # 传递给 GoReleaser 的参数
+        args: release --rm-dist
       env:
+        # 提供访问仓库token
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
