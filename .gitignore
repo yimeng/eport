@@ -21,3 +21,5 @@ temp/
 *.so
 *.sw[po]
 *.tar.gz
+
+dist/
