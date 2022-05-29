@@ -29,15 +29,15 @@ var eportPort string
 //initializes every descriptor and returns a pointer to the collector
 func newSmartWattHourMeterCollector() *smartWattHourCollector {
 	return &smartWattHourCollector{
-		electricityMetric: prometheus.NewDesc("electricityMetric",
+		electricityMetric: prometheus.NewDesc("eport_metric_electricity",
 			"Shows electricityMetric",
 			nil, nil,
 		),
-		voltageMetric: prometheus.NewDesc("voltageMetric",
+		voltageMetric: prometheus.NewDesc("eport_metric_voltage",
 			"Shows voltageMetric",
 			nil, nil,
 		),
-		wattMetric: prometheus.NewDesc("wattHourMetric",
+		wattMetric: prometheus.NewDesc("eport_metric_wattHour",
 			"Shows wattHourMetric",
 			nil, nil,
 		),
@@ -69,9 +69,9 @@ func (collector *smartWattHourCollector) Collect(ch chan<- prometheus.Metric) {
 
 	//Write latest value for each metric in the prometheus metric channel.
 	//Note that you can pass CounterValue, GaugeValue, or UntypedValue types here.
-	ch <- prometheus.MustNewConstMetric(collector.electricityMetric, prometheus.CounterValue, currentMetric)
-	ch <- prometheus.MustNewConstMetric(collector.voltageMetric, prometheus.CounterValue, voltageMetric)
-	ch <- prometheus.MustNewConstMetric(collector.wattMetric, prometheus.CounterValue, wattMetric)
+	ch <- prometheus.MustNewConstMetric(collector.electricityMetric, prometheus.GaugeValue, currentMetric)
+	ch <- prometheus.MustNewConstMetric(collector.voltageMetric, prometheus.GaugeValue, voltageMetric)
+	ch <- prometheus.MustNewConstMetric(collector.wattMetric, prometheus.GaugeValue, wattMetric)
 
 }
 
